@@ -41,13 +41,16 @@ const searchDelayEls =[...searchWrapEl.querySelectorAll('li')]
 const searchInputEls = searchWrapEl.querySelector('input')
 
 searchStarterEl.addEventListener('click',showSearch)
-searchCloserEl.addEventListener('click',hideSearch)
+searchCloserEl.addEventListener('click',function(event){
+  event.stopPropagation()
+  hideSearch()
+})
 shadowEl.addEventListener('click',hideSearch)
 
 
 function showSearch(){
   headerEl.classList.add('searching')
-  document.documentElement.classList.add('fixed')
+  playScroll()
   
   headerMenuEls.reverse().forEach(function(el, index){
     el.style.transitionDelay = index * .4 /headerMenuEls.length + 's'
@@ -63,7 +66,7 @@ function showSearch(){
 
 function hideSearch(){
   headerEl.classList.remove('searching')  
-  document.documentElement.classList.remove('fixed')
+  playScroll()
   headerMenuEls.reverse().forEach(function(el, index){
     el.style.transitionDelay = index * .4 /headerMenuEls.length + 's'
   })
@@ -73,6 +76,38 @@ function hideSearch(){
   searchDelayEls.reverse()
   searchInputEls.value=''
 }
+
+
+//헤더메뉴 토글
+const menuStarterEl = document.querySelector('header .menu-starter')
+menuStarterEl.addEventListener('click',function(){
+  if(headerEl.classList.contains('menuing')){
+    headerEl.classList.remove('menuing')
+    searchInputEls.value=''
+    playScroll();
+  } else {
+    headerEl.classList.add('menuing')
+    stopScroll();
+  }
+})
+
+//헤더 검색
+const searchTextfieldEl = document.querySelector('header .textfield')
+const searchCancelEl = document.querySelector('header .search-canceler')
+searchTextfieldEl.addEventListener('click',function(){
+  headerEl.classList.add('searching--mobile')
+})
+searchCancelEl.addEventListener('click',function(){
+  headerEl.classList.remove('searching--mobile')
+})
+
+window.addEventListener('resize',function(){
+  if(this.window.innerWidth <= 740){
+    headerEl.classList.remove('searching')
+  }else{
+    headerEl.classList.remove('searching--mobile')
+  }
+})
 
 
 //keyframe
@@ -164,3 +199,11 @@ navigations.forEach(function(nav){
 const dateEl = document.querySelector('footer .legal .copyright .this-year')
 const thisYear = new Date().getFullYear()
 dateEl.innerHTML=thisYear 
+
+//스크롤 
+function playScroll(){
+  document.documentElement.classList.remove('fixed')
+}
+function stopScroll(){
+  document.documentElement.classList.add('fixed')
+}
