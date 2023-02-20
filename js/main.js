@@ -109,6 +109,29 @@ window.addEventListener('resize',function(){
   }
 })
 
+const navEl = document.querySelector('nav')
+const navMenuTogglerEl = navEl.querySelector('.menu-toggler')
+const navShadowEl = navEl.querySelector('.shadow')
+
+navMenuTogglerEl.addEventListener('click',function(){
+  if(navEl.classList.contains('menuing')){
+    hideNavMenu()
+  }else{
+    showNavMenu()
+  }
+})
+navShadowEl.addEventListener('click',hideNavMenu)
+navEl.addEventListener('click',function(event){
+  event.stopPropagation()
+})
+window.addEventListener('click',hideNavMenu)
+
+function showNavMenu(){
+  navEl.classList.add('menuing')
+}
+function hideNavMenu(){
+  navEl.classList.remove('menuing')
+}
 
 //keyframe
 //요소의 가시성 관찰
@@ -187,6 +210,7 @@ navigations.forEach(function(nav){
   mapEl.innerHTML=/*html */`
   <h3>
   <span class="text">${nav.title}</span>
+  <span class="icon">+</span>
   </h3>
   <ul>
     ${maplist}
@@ -195,6 +219,8 @@ navigations.forEach(function(nav){
 
   navigationsEl.append(mapEl)
 })
+
+
 
 const dateEl = document.querySelector('footer .legal .copyright .this-year')
 const thisYear = new Date().getFullYear()
@@ -207,3 +233,13 @@ function playScroll(){
 function stopScroll(){
   document.documentElement.classList.add('fixed')
 }
+
+//map 아코디언
+const mapEls = document.querySelectorAll('footer .navigations .map')
+mapEls.forEach(function(el){
+  const h3El = el.querySelector('h3')
+  h3El.addEventListener('click',function(){
+    el.classList.toggle('active')
+  })
+
+})
